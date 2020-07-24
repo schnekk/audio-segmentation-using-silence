@@ -1,0 +1,6 @@
+.ipynb_checkpoints
+.ipynb
+.vscode
+data
+find_spike.py
+view_files_in_folders.py
