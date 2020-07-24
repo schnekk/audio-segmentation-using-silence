@@ -78,9 +78,13 @@ def end_silence_trim(data,rate,sampwidth):
     silence_thresh = 9e-5
     window_silence = [silence_thresh > e for e in window_energy]
     index = len(window_silence)-1
-    while(window_silence[index] and index > 0):
+    while(window_silence[index] and index > 2):
         index -= 1
-    stop = int(index * step_duration * rate) + (2*window_size)
+    if index < len(window_silence)-1-2:
+        extra_frame = 2*window_size
+    else:
+        extra_frame = window_size
+    stop = int(index * step_duration * rate) + extra_frame
     return data[:stop]
 
 def start_silence_trim(data,rate,sampwidth):
@@ -98,9 +102,13 @@ def start_silence_trim(data,rate,sampwidth):
     silence_thresh = 9e-5
     window_silence = [silence_thresh > e for e in window_energy]
     index = 0
-    while(window_silence[index] and index < len(window_silence)-1):
+    while(window_silence[index] and index < len(window_silence)-2):
         index += 1
-    start = int(index * step_duration * rate) - window_size
+    if index > 2:
+        extra_frame = 2*window_size
+    else:
+        extra_frame = 0
+    start = int(index * step_duration * rate) - extra_frame
     return data[start:]
 
 def segment_method2(input_path,output_dir):
